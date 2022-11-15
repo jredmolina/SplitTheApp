@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/title"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextContrastCheck" />
+
+    <TextView
+        android:id="@+id/number_of_people_label_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/number_of_people_label"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_textView" />
+
+    <TextView
+        android:id="@+id/number_of_people_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/number_of_people"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toStartOf="@+id/people_add_imageView"
+        app:layout_constraintStart_toEndOf="@+id/people_subtract_imageView"
+        app:layout_constraintTop_toBottomOf="@+id/number_of_people_label_textView" />
+
+    <ImageView
+        android:id="@+id/people_subtract_imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/number_of_people_label_textView"
+        app:layout_constraintTop_toBottomOf="@+id/number_of_people_label_textView"
+        app:srcCompat="@drawable/minus_icon" />
+
+    <ImageView
+        android:id="@+id/people_add_imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/number_of_people_label_textView"
+        app:layout_constraintTop_toBottomOf="@+id/number_of_people_label_textView"
+        app:srcCompat="@drawable/add_icon" />
+
+    <TextView
+        android:id="@+id/tip_amount_label_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/tip_amount_label"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/tip_add_imageView"
+        app:layout_constraintTop_toBottomOf="@+id/title_textView" />
+
+    <TextView
+        android:id="@+id/tip_amount_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tip_amount"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toStartOf="@+id/tip_add_imageView"
+        app:layout_constraintStart_toEndOf="@+id/tip_subtract_imageView"
+        app:layout_constraintTop_toBottomOf="@+id/tip_amount_label_textView" />
+
+    <ImageView
+        android:id="@+id/tip_subtract_imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/tip_amount_label_textView"
+        app:layout_constraintTop_toBottomOf="@+id/tip_amount_label_textView"
+        app:srcCompat="@drawable/minus_icon" />
+
+    <ImageView
+        android:id="@+id/tip_add_imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tip_amount_label_textView"
+        app:srcCompat="@drawable/add_icon" />
+
+    <TextView
+        android:id="@+id/tax_label_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/tax_label"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/number_of_people_textView" />
+
+    <TextView
+        android:id="@+id/tax_result_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:text="@string/tax_result"
+        android:textSize="34sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tax_label_textView" />
+
+    <TextView
+        android:id="@+id/subtotal_label_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
+        android:text="@string/subtotal_label"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tip_amount_textView" />
+
+    <TextView
+        android:id="@+id/subtotal_result_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="56dp"
+        android:text="@string/subtotal_result"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subtotal_label_textView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
