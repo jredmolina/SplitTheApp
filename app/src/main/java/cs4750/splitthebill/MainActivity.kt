@@ -80,13 +80,13 @@ class MainActivity : AppCompatActivity()
     private fun decreaseTaxAmount()
     {
         tipAmount -= 5
-        tipAmountTextView.setText(tipAmount.toString())
+        tipAmountTextView.setText(tipAmount.toString() + "%")
     }   // end removePerson function
 
     private fun increaseTaxAmount()
     {
         tipAmount += 5
-        tipAmountTextView.setText(tipAmount.toString())
+        tipAmountTextView.setText(tipAmount.toString() + "%")
     }   // end removePerson function
 
     private fun checkNumberOfPeople()
