@@ -5,12 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -130,17 +130,42 @@
             app:layout_constraintTop_toBottomOf="@+id/number_of_people_textView" />
 
 <!--        // Text for tax value-->
-        <TextView
+
+        <!--        // Text for subtotal label-->
+
+        <EditText
             android:id="@+id/tax_result_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:text="@string/tax_result"
-            android:textSize="34sp"
+            android:layout_marginStart="28dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:hint="Enter Tax"
+            android:inputType="numberDecimal"
+            android:onClick="onClick"
+            android:textSize="25sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tax_label_textView" />
 
-<!--        // Text for subtotal label-->
+        <ImageView
+            android:id="@+id/dollarsign_imageView"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tax_result_textView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/dollarsign" />
+
+        <ImageView
+            android:id="@+id/dollarsign_imageView2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/subtotal_result_textView"
+            app:srcCompat="@drawable/dollarsign" />
+
         <TextView
             android:id="@+id/subtotal_label_textView"
             android:layout_width="wrap_content"
@@ -153,15 +178,19 @@
             app:layout_constraintTop_toBottomOf="@+id/tip_amount_textView" />
 
 <!--        // Text for subtotal result-->
-        <TextView
+        <EditText
             android:id="@+id/subtotal_result_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="56dp"
-            android:text="@string/subtotal_result"
-            android:textSize="34sp"
+            android:gravity="center"
+            android:layout_marginEnd="16dp"
+            android:hint="Enter Subtotal"
+            android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subtotal_label_textView" />
+            app:layout_constraintTop_toBottomOf="@+id/subtotal_label_textView"
+            android:inputType="numberDecimal"
+            android:onClick="onClick"
+            android:clickable="true"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

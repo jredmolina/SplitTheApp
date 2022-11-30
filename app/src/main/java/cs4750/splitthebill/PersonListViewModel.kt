@@ -7,7 +7,7 @@ class PersonListViewModel: ViewModel() {
     // List of Persons
     val persons = mutableListOf<Person>(
         Person(),
-        Person()
+        Person(),
     )
 
     // Number of persons initialized to 2

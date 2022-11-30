@@ -1,13 +1,16 @@
 package cs4750.splitthebill
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.Spanned
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 private const val KEY_NUMOFPEOPLE= "numOfPeople"
@@ -32,6 +35,8 @@ class MainActivity : AppCompatActivity()
 
     private lateinit var taxResultTextView: TextView
     private lateinit var subtotalResultTextView: TextView
+    private lateinit var dollarsignImageView: ImageView
+    private lateinit var dollarsignImageView2: ImageView
 
     private val personListViewModel: PersonListViewModel by lazy{
         ViewModelProviders.of(this).get(PersonListViewModel::class.java)
@@ -76,7 +81,15 @@ class MainActivity : AppCompatActivity()
         tipAddImageView = findViewById(R.id.tip_add_imageView)
 
         taxResultTextView = findViewById(R.id.tax_result_textView)
+        // Limit input value digits before zero to 8 and 2 after zero
+        taxResultTextView.setFilters(arrayOf<InputFilter>(DecimalDigitsInputFilter(8, 2)))
+
         subtotalResultTextView = findViewById(R.id.subtotal_result_textView)
+        // Limit input value digits before zero to 8 and 2 after zero
+        subtotalResultTextView.setFilters(arrayOf<InputFilter>(DecimalDigitsInputFilter(8, 2)))
+
+        dollarsignImageView = findViewById(R.id.dollarsign_imageView)
+        dollarsignImageView2 = findViewById(R.id.dollarsign_imageView2)
 
 
         peopleSubtractImageView.setOnClickListener {
@@ -97,6 +110,21 @@ class MainActivity : AppCompatActivity()
         tipAddImageView.setOnClickListener {
             increaseTaxAmount()
             checkTipAmount()
+        }
+
+        // Tap on the taxResultTextView to edit value
+        taxResultTextView.setOnClickListener {
+
+            val userText = taxResultTextView.text
+            taxResultTextView.setText(userText)
+            taxResultTextView.clearFocus()
+        }
+        // Tap on the subtotalResultTextView to edit value
+        subtotalResultTextView.setOnClickListener {
+
+            val userText = subtotalResultTextView.text
+            subtotalResultTextView.setText(userText)
+            subtotalResultTextView.clearFocus()
         }
 
         checkNumberOfPeople()
@@ -182,6 +210,28 @@ class MainActivity : AppCompatActivity()
 
     override fun onPause() {
         super.onPause()
+    }
+
+    // Filter to limit tax and subtotal input decimal values
+    class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) :
+        InputFilter {
+        var mPattern: Pattern
+        override fun filter(
+            source: CharSequence,
+            start: Int,
+            end: Int,
+            dest: Spanned,
+            dstart: Int,
+            dend: Int
+        ): CharSequence? {
+            val matcher: Matcher = mPattern.matcher(dest)
+            return if (!matcher.matches()) "" else null
+        }
+
+        init {
+            mPattern =
+                Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
+        }
     }
 
 }   // end MainActivity class
