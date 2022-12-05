@@ -1,13 +1,17 @@
 package cs4750.splitthebill
 
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputFilter
 import android.text.Spanned
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -67,7 +71,8 @@ class MainActivity : AppCompatActivity()
         var taxResult = savedInstanceState?.getDouble(KEY_TAXRESULT, 0.0) ?: 0.0
         personListViewModel.taxResult = taxResult
         var subtotalResult = savedInstanceState?.getDouble(KEY_SUBTOTALRESULT, 0.0) ?: 0.0
-        personListViewModel.taxResult=subtotalResult
+        personListViewModel.subtotalResult=subtotalResult
+
 
 
 
@@ -117,13 +122,17 @@ class MainActivity : AppCompatActivity()
 
             val userText = taxResultTextView.text
             taxResultTextView.setText(userText)
+            taxResultTextView.addTextChangedListener(textWatcher)
             taxResultTextView.clearFocus()
+
         }
+
         // Tap on the subtotalResultTextView to edit value
         subtotalResultTextView.setOnClickListener {
 
             val userText = subtotalResultTextView.text
             subtotalResultTextView.setText(userText)
+            subtotalResultTextView.addTextChangedListener(textWatcher)
             subtotalResultTextView.clearFocus()
         }
 
@@ -132,6 +141,24 @@ class MainActivity : AppCompatActivity()
 
 
     }   // end onCreate function
+
+    private val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            if (!tipAmountTextView.text.isEmpty() && !subtotalResultTextView.text.isEmpty()) {
+                calculateIndividualTip()
+
+            }
+
+        }
+        override fun beforeTextChanged(s: CharSequence, start: Int,
+                                       count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence, start: Int,
+                                   before: Int, count: Int) {
+
+        }
+    }
 
     private fun removePerson()
     {
@@ -210,6 +237,14 @@ class MainActivity : AppCompatActivity()
 
     override fun onPause() {
         super.onPause()
+    }
+
+    // Calculate the tip amount a person has to pay by ((tip percentage) *
+    // (Entire bill subtotal)) / (number of people in the party)
+    private fun calculateIndividualTip() {
+        var individualTip = ((tipAmount / 100) * subtotalResultTextView.text.toString().toDouble()) / numberOfPeople
+        Log.i(TAG, "Individual tip : $individualTip")
+
     }
 
     // Filter to limit tax and subtotal input decimal values

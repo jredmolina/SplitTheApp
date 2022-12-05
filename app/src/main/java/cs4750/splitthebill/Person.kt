@@ -1,5 +1,7 @@
 package cs4750.splitthebill
 
+import android.util.Log
+import android.widget.TextView
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -10,7 +12,7 @@ class Person {
 
     // List of items a person is paying for
     val items = mutableListOf<Item>(
-        Item("Item", 0.0,false),
+        Item("Item", 10.0),
     )
 
     // Total amount a person is paying

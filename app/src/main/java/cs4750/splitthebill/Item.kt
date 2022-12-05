@@ -11,6 +11,4 @@ data class Item (
     // Price of Item
     var price: Double = 0.0,
 
-    // Is the item shared or not
-    var shared: Boolean = false
 )

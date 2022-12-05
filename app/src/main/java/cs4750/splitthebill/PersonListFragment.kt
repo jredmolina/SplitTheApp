@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-private const val TAG = "PersonListFragment"
+const val TAG = "PersonListFragment"
 class PersonListFragment: Fragment() {
 
     private lateinit var personRecyclerView: RecyclerView
