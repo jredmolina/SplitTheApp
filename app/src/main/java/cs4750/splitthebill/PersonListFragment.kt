@@ -86,14 +86,6 @@ class PersonListFragment: Fragment() {
             val personTitleEditText: EditText = view.findViewById(R.id.person_title_edit)
             val personTitleText: TextView = view.findViewById(R.id.person_title)
 
-            fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
-
-
-
-            val param = personTitleText.layoutParams as ViewGroup.MarginLayoutParams
-
-            fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
-
             addItemImage.setOnClickListener {
                 personListViewModel.persons[0].items.add(Item("test", 123.0))
                 updateUI()
