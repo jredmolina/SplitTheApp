@@ -110,13 +110,6 @@ class PersonListFragment: Fragment() {
                 }
             }
 
-            personTitleText.setOnClickListener{
-                val userText = personTitleText.text
-                personTitleText.setText(userText)
-                personTitleText.addTextChangedListener(textWatcher)
-                personTitleText.clearFocus()
-            }
-
             return PersonHolder(view)
         }
 
