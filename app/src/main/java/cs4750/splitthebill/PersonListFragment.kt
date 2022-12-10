@@ -2,15 +2,22 @@ package cs4750.splitthebill
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.text.Editable
+import android.text.InputFilter
+import android.text.Spanned
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.*
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 const val TAG = "PersonListFragment"
 class PersonListFragment: Fragment() {
@@ -75,6 +82,15 @@ class PersonListFragment: Fragment() {
 
             val addItemImage: ImageView = view.findViewById(R.id.item_add_imageView)
             val editPersonImage: ImageView = view.findViewById(R.id.editImageView)
+            val deletePersonImage: ImageView = view.findViewById(R.id.deletePersonImage)
+            val personTitleEditText: EditText = view.findViewById(R.id.person_title_edit)
+            val personTitleText: TextView = view.findViewById(R.id.person_title)
+
+            fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
+
+
+
+            val param = personTitleText.layoutParams as ViewGroup.MarginLayoutParams
 
             fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
@@ -84,34 +100,47 @@ class PersonListFragment: Fragment() {
             }
 
             editPersonImage.setOnClickListener{
-                val deletePersonImage: ImageView = view.findViewById(R.id.deletePersonImage)
-                val personTitleText: TextView = view.findViewById(R.id.person_title)
-
-                val param = personTitleText.layoutParams as ViewGroup.MarginLayoutParams
-
-
-
                 if(!isEditable){
                     deletePersonImage.setVisibility(View.VISIBLE)
-
-                    param.setMarginStart(40.toPx())
-                    personTitleText.layoutParams = param
+                    personTitleEditText.setVisibility(View.VISIBLE)
+                    personTitleText.setVisibility(View.INVISIBLE)
+                    personTitleEditText.setText(personTitleText.text.toString())
 
                     isEditable = true
                 }
                 else{
-                    deletePersonImage.setVisibility(View.GONE)
-
-                    param.setMarginStart(15.toPx())
-                    personTitleText.layoutParams = param
+                    personTitleText.setVisibility(View.VISIBLE)
+                    deletePersonImage.setVisibility(View.INVISIBLE)
+                    personTitleEditText.setVisibility(View.INVISIBLE)
+                    personTitleText.text = personTitleEditText.text.toString()
 
                     isEditable = false
                 }
+            }
 
-
+            personTitleText.setOnClickListener{
+                val userText = personTitleText.text
+                personTitleText.setText(userText)
+                personTitleText.addTextChangedListener(textWatcher)
+                personTitleText.clearFocus()
             }
 
             return PersonHolder(view)
+        }
+
+        private val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+
+            }
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+
+            }
         }
 
         // Gets Person count for person recyclerView
