@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import cs4750.splitthebill.Person
 
 
 private const val KEY_NUMOFPEOPLE= "numOfPeople"
@@ -242,8 +243,30 @@ class MainActivity : AppCompatActivity()
     // Calculate the tip amount a person has to pay by ((tip percentage) *
     // (Entire bill subtotal)) / (number of people in the party)
     private fun calculateIndividualTip() {
+
         var individualTip = ((tipAmount / 100) * subtotalResultTextView.text.toString().toDouble()) / numberOfPeople
         Log.i(TAG, "Individual tip : $individualTip")
+    }
+
+    /**
+     * Currently this is hardcoded to calculate the subtotal for the first person.( person in the [0] index )
+     * I think we can change this function and have it call whenever a user edits their
+     * food items in their Person object so each person has their own individualSubtotal
+     * */
+
+    private fun calculateIndividualSubtotal(): Double {
+
+        var individualSubtotal = personListViewModel.persons[0].items.sumOf{ it.price }   // sumOf is a built in method that sums all elements in an object
+        Log.i(TAG, "Individual subtotal : $individualSubtotal")
+        return individualSubtotal
+
+    }
+    
+    private fun calculateIndividualTax() {
+
+        var individualSubtotal = calculateIndividualSubtotal()
+        var individualTax = (individualSubtotal / subtotalResultTextView.text.toString().toDouble()) * taxResultTextView.text.toString().toDouble()
+        Log.i(TAG, "Individual tax amount : $individualTax")
 
     }
 
