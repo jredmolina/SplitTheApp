@@ -1,10 +1,12 @@
 package cs4750.splitthebill
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,6 +71,46 @@ class PersonListFragment: Fragment() {
         private var viewPool = RecyclerView.RecycledViewPool()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonHolder {
             val view = layoutInflater.inflate(R.layout.list_item_person, parent, false)
+            var isEditable = false
+
+            val addItemImage: ImageView = view.findViewById(R.id.item_add_imageView)
+            val editPersonImage: ImageView = view.findViewById(R.id.editImageView)
+
+            fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+            addItemImage.setOnClickListener {
+                personListViewModel.persons[0].items.add(Item("test", 123.0))
+                updateUI()
+            }
+
+            editPersonImage.setOnClickListener{
+                val deletePersonImage: ImageView = view.findViewById(R.id.deletePersonImage)
+                val personTitleText: TextView = view.findViewById(R.id.person_title)
+
+                val param = personTitleText.layoutParams as ViewGroup.MarginLayoutParams
+
+
+
+                if(!isEditable){
+                    deletePersonImage.setVisibility(View.VISIBLE)
+
+                    param.setMarginStart(40.toPx())
+                    personTitleText.layoutParams = param
+
+                    isEditable = true
+                }
+                else{
+                    deletePersonImage.setVisibility(View.GONE)
+
+                    param.setMarginStart(15.toPx())
+                    personTitleText.layoutParams = param
+
+                    isEditable = false
+                }
+
+
+            }
+
             return PersonHolder(view)
         }
 
