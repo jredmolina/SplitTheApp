@@ -99,7 +99,7 @@ class PersonListFragment: Fragment() {
                 totalTextView.setText("Total Owed: " + person.total.toString())
 
                 addItemImage.setOnClickListener {
-                    persons[position].items.add(Item("test", 123.0))
+                    persons[position].items.add(Item("Item", 10.00))
                     updateUI()
                 }
 
@@ -110,6 +110,25 @@ class PersonListFragment: Fragment() {
                         titleTextView.setVisibility(View.INVISIBLE)
                         personTitleEditText.setText(titleTextView.text.toString())
 
+                        val itemCount = holder.itemRecycler.adapter!!.itemCount
+                        for (i in 0 until itemCount){
+                            val newHolder = itemRecycler.findViewHolderForAdapterPosition(i)
+                            val itemName: TextView = newHolder?.itemView!!.findViewById(R.id.item_title)
+                            val itemPrice: TextView = newHolder.itemView.findViewById(R.id.item_price)
+                            val itemNameEdit: EditText = newHolder.itemView.findViewById(R.id.item_title_edit)
+                            val itemPriceEdit: EditText = newHolder.itemView.findViewById(R.id.item_price_edit)
+                            val itemDeleteImage: ImageView = newHolder.itemView.findViewById(R.id.item_delete)
+
+                            itemName.setVisibility(View.INVISIBLE)
+                            itemPrice.setVisibility(View.INVISIBLE)
+                            itemNameEdit.setVisibility(View.VISIBLE)
+                            itemPriceEdit.setVisibility(View.VISIBLE)
+                            itemDeleteImage.setVisibility(View.VISIBLE)
+
+                            itemNameEdit.setText(itemName.text.toString())
+                            itemPriceEdit.setText(itemPrice.text.toString())
+                        }
+
                         isEditable = true
                     }
                     else{
@@ -117,6 +136,25 @@ class PersonListFragment: Fragment() {
                         deletePersonImage.setVisibility(View.INVISIBLE)
                         personTitleEditText.setVisibility(View.INVISIBLE)
                         titleTextView.text = personTitleEditText.text.toString()
+
+                        val itemCount = holder.itemRecycler.adapter!!.itemCount
+                        for (i in 0 until itemCount){
+                            val newHolder = itemRecycler.findViewHolderForAdapterPosition(i)
+                            val itemName: TextView = newHolder?.itemView!!.findViewById(R.id.item_title)
+                            val itemPrice: TextView = newHolder.itemView.findViewById(R.id.item_price)
+                            val itemNameEdit: EditText = newHolder.itemView.findViewById(R.id.item_title_edit)
+                            val itemPriceEdit: EditText = newHolder.itemView.findViewById(R.id.item_price_edit)
+                            val itemDeleteImage: ImageView = newHolder.itemView.findViewById(R.id.item_delete)
+
+                            itemName.setVisibility(View.VISIBLE)
+                            itemPrice.setVisibility(View.VISIBLE)
+                            itemNameEdit.setVisibility(View.INVISIBLE)
+                            itemPriceEdit.setVisibility(View.INVISIBLE)
+                            itemDeleteImage.setVisibility(View.INVISIBLE)
+
+                            itemName.text = itemNameEdit.text.toString()
+                            itemPrice.text = itemPriceEdit.text.toString()
+                        }
 
                         isEditable = false
                     }
