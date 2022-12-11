@@ -68,6 +68,10 @@ class PersonListFragment: Fragment() {
             val titleTextView: TextView = itemView.findViewById(R.id.person_title)
             val itemRecycler: RecyclerView = view.findViewById(R.id.item_recycler_view)
             val totalTextView: TextView = view.findViewById(R.id.person_total)
+            val addItemImage: ImageView = view.findViewById(R.id.item_add_imageView)
+            val editPersonImage: ImageView = view.findViewById(R.id.editImageView)
+            val deletePersonImage: ImageView = view.findViewById(R.id.deletePersonImage)
+            val personTitleEditText: EditText = view.findViewById(R.id.person_title_edit)
         }
 
     // Connects data to Display
@@ -78,54 +82,8 @@ class PersonListFragment: Fragment() {
         private var viewPool = RecyclerView.RecycledViewPool()
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonHolder {
             val view = layoutInflater.inflate(R.layout.list_item_person, parent, false)
-            var isEditable = false
-
-            val addItemImage: ImageView = view.findViewById(R.id.item_add_imageView)
-            val editPersonImage: ImageView = view.findViewById(R.id.editImageView)
-            val deletePersonImage: ImageView = view.findViewById(R.id.deletePersonImage)
-            val personTitleEditText: EditText = view.findViewById(R.id.person_title_edit)
-            val personTitleText: TextView = view.findViewById(R.id.person_title)
-
-            addItemImage.setOnClickListener {
-                personListViewModel.persons[0].items.add(Item("test", 123.0))
-                updateUI()
-            }
-
-            editPersonImage.setOnClickListener{
-                if(!isEditable){
-                    deletePersonImage.setVisibility(View.VISIBLE)
-                    personTitleEditText.setVisibility(View.VISIBLE)
-                    personTitleText.setVisibility(View.INVISIBLE)
-                    personTitleEditText.setText(personTitleText.text.toString())
-
-                    isEditable = true
-                }
-                else{
-                    personTitleText.setVisibility(View.VISIBLE)
-                    deletePersonImage.setVisibility(View.INVISIBLE)
-                    personTitleEditText.setVisibility(View.INVISIBLE)
-                    personTitleText.text = personTitleEditText.text.toString()
-
-                    isEditable = false
-                }
-            }
 
             return PersonHolder(view)
-        }
-
-        private val textWatcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-
-
-            }
-            override fun beforeTextChanged(s: CharSequence, start: Int,
-                                           count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int,
-                                       before: Int, count: Int) {
-
-            }
         }
 
         // Gets Person count for person recyclerView
@@ -135,11 +93,38 @@ class PersonListFragment: Fragment() {
         override fun onBindViewHolder(holder: PersonHolder, position: Int) {
             val person = persons[position]
             holder.apply {
+                var isEditable = false
+
                 titleTextView.setText(person.name)
                 totalTextView.setText("Total Owed: " + person.total.toString())
+
+                addItemImage.setOnClickListener {
+                    persons[position].items.add(Item("test", 123.0))
+                    updateUI()
+                }
+
+                editPersonImage.setOnClickListener{
+                    if(!isEditable){
+                        deletePersonImage.setVisibility(View.VISIBLE)
+                        personTitleEditText.setVisibility(View.VISIBLE)
+                        titleTextView.setVisibility(View.INVISIBLE)
+                        personTitleEditText.setText(titleTextView.text.toString())
+
+                        isEditable = true
+                    }
+                    else{
+                        titleTextView.setVisibility(View.VISIBLE)
+                        deletePersonImage.setVisibility(View.INVISIBLE)
+                        personTitleEditText.setVisibility(View.INVISIBLE)
+                        titleTextView.text = personTitleEditText.text.toString()
+
+                        isEditable = false
+                    }
+                }
             }
             val layoutManager = LinearLayoutManager(holder.itemRecycler.context)
             layoutManager.setInitialPrefetchItemCount(person.items.size)
+
 
             // Sets recyclerView for person's items list
             var itemAdapter = ItemAdapter(person.items)
