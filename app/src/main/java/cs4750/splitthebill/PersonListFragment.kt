@@ -182,9 +182,12 @@ class PersonListFragment: Fragment() {
         :RecyclerView.ViewHolder(view){
         val titleTextView: TextView = itemView.findViewById(R.id.item_title)
         val priceTextView: TextView = itemView.findViewById(R.id.item_price)
+        val itemNameEdit: EditText = itemView.findViewById(R.id.item_title_edit)
+        val itemPriceEdit: EditText = itemView.findViewById(R.id.item_price_edit)
+        val itemDeleteImage: ImageView = itemView.findViewById(R.id.item_delete)
     }
 
-    private inner class ItemAdapter(var items: List<Item>)
+    private inner class ItemAdapter(var items: MutableList<Item>)
         :RecyclerView.Adapter<ItemHolder>(){
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
@@ -200,6 +203,11 @@ class PersonListFragment: Fragment() {
                 holder.apply{
                     titleTextView.text = item.name
                     priceTextView.text = item.price.toString()
+
+                    itemDeleteImage.setOnClickListener{
+                        items.removeAt(position)
+                        updateUI()
+                    }
 
                 }
             }
