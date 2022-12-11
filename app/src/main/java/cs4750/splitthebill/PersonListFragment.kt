@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.Spanned
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -98,8 +99,16 @@ class PersonListFragment: Fragment() {
                 titleTextView.setText(person.name)
                 totalTextView.setText("Total Owed: " + person.total.toString())
 
+                fun calculateIndividualSubtotal(): Double {
+
+                    var individualSubtotal = personListViewModel.persons[position].items.sumOf{ it.price }   // sumOf is a built in method that sums all elements in an object
+                    Log.i(TAG, "Individual subtotal : $individualSubtotal")
+                    return individualSubtotal
+
+                }
+
                 addItemImage.setOnClickListener {
-                    person.items.add(Item("Item", 10.00))
+                    person.items.add(Item("Item", 0.00))
                     updateUI()
                 }
 
@@ -164,12 +173,18 @@ class PersonListFragment: Fragment() {
                             itemPrice.text = itemPriceEdit.text.toString()
                             person.items[i].name = itemName.text.toString()
                             person.items[i].price = itemPrice.text.toString().toDouble()
+
+                            person.total = calculateIndividualSubtotal()
+                            updateUI()
                         }
 
                         isEditable = false
                     }
                 }
             }
+
+
+
             val layoutManager = LinearLayoutManager(holder.itemRecycler.context)
             layoutManager.setInitialPrefetchItemCount(person.items.size)
 
