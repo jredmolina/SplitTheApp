@@ -75,7 +75,7 @@ class PersonListFragment: Fragment() {
         }
 
     // Connects data to Display
-    private inner class PersonAdapter(var persons: List<Person>)
+    private inner class PersonAdapter(var persons: MutableList<Person>)
         : RecyclerView.Adapter<PersonHolder>(){
 
         // Combines Person RecyclerView and Item RecyclerView
@@ -99,8 +99,13 @@ class PersonListFragment: Fragment() {
                 totalTextView.setText("Total Owed: " + person.total.toString())
 
                 addItemImage.setOnClickListener {
-                    persons[position].items.add(Item("Item", 10.00))
+                    person.items.add(Item("Item", 10.00))
                     updateUI()
+                }
+
+                deletePersonImage.setOnClickListener{
+                    persons.removeAt(position)
+                    personRecyclerView.adapter!!.notifyItemRemoved(position)
                 }
 
                 editPersonImage.setOnClickListener{
