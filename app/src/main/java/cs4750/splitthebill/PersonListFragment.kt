@@ -137,6 +137,8 @@ class PersonListFragment: Fragment() {
                             val itemPriceEdit: EditText = newHolder.itemView.findViewById(R.id.item_price_edit)
                             val itemDeleteImage: ImageView = newHolder.itemView.findViewById(R.id.item_delete)
 
+                            itemPriceEdit.setFilters(arrayOf<InputFilter>(MainActivity.DecimalDigitsInputFilter(8, 2)))
+
                             itemName.setVisibility(View.INVISIBLE)
                             itemPrice.setVisibility(View.INVISIBLE)
                             itemNameEdit.setVisibility(View.VISIBLE)
@@ -165,6 +167,8 @@ class PersonListFragment: Fragment() {
                             val itemNameEdit: EditText = newHolder.itemView.findViewById(R.id.item_title_edit)
                             val itemPriceEdit: EditText = newHolder.itemView.findViewById(R.id.item_price_edit)
                             val itemDeleteImage: ImageView = newHolder.itemView.findViewById(R.id.item_delete)
+
+                            itemPriceEdit.setFilters(arrayOf<InputFilter>(MainActivity.DecimalDigitsInputFilter(8, 2)))
 
                             itemName.setVisibility(View.VISIBLE)
                             itemPrice.setVisibility(View.VISIBLE)

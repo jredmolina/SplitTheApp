@@ -12,11 +12,11 @@ class Person {
 
     // List of items a person is paying for
     val items = mutableListOf<Item>(
-        Item("Item", 0.0),
+        Item("Item", 0.00),
     )
 
     // Total amount a person is paying
-    var total: Double = 0.0
+    var total: Double = 0.00
 
 
     // Adds blank item to item list

@@ -9,6 +9,6 @@ data class Item (
     var name: String = "Item",
 
     // Price of Item
-    var price: Double = 0.0,
+    var price: Double = 0.00,
 
 )
