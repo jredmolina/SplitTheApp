@@ -113,6 +113,7 @@ class PersonListFragment: Fragment() {
                         deletePersonImage.setVisibility(View.VISIBLE)
                         personTitleEditText.setVisibility(View.VISIBLE)
                         titleTextView.setVisibility(View.INVISIBLE)
+                        addItemImage.setVisibility(View.INVISIBLE)
                         personTitleEditText.setText(titleTextView.text.toString())
 
                         val itemCount = holder.itemRecycler.adapter!!.itemCount
@@ -138,6 +139,7 @@ class PersonListFragment: Fragment() {
                     }
                     else{
                         titleTextView.setVisibility(View.VISIBLE)
+                        addItemImage.setVisibility(View.VISIBLE)
                         deletePersonImage.setVisibility(View.INVISIBLE)
                         personTitleEditText.setVisibility(View.INVISIBLE)
                         titleTextView.text = personTitleEditText.text.toString()
