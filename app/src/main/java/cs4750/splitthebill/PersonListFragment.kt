@@ -54,10 +54,21 @@ class PersonListFragment: Fragment() {
         return view
     }
 
+    fun calculateIndividualSubtotal(position: Int): Double {
+
+        var individualSubtotal = personListViewModel.persons[position].items.sumOf{ it.price }   // sumOf is a built in method that sums all elements in an object
+        return individualSubtotal
+
+    }
+
 
     // Updates UI by passing persons array back to adapter
     private fun updateUI() {
         val persons = personListViewModel.persons
+        val itemCount = persons.size
+        for (i in 0 until itemCount){
+            persons[i].total = calculateIndividualSubtotal(i)
+        }
         adapter = PersonAdapter(persons)
         personRecyclerView.adapter = adapter
 
@@ -98,14 +109,6 @@ class PersonListFragment: Fragment() {
 
                 titleTextView.setText(person.name)
                 totalTextView.setText("Total Owed: " + person.total.toString())
-
-                fun calculateIndividualSubtotal(): Double {
-
-                    var individualSubtotal = personListViewModel.persons[position].items.sumOf{ it.price }   // sumOf is a built in method that sums all elements in an object
-                    Log.i(TAG, "Individual subtotal : $individualSubtotal")
-                    return individualSubtotal
-
-                }
 
                 addItemImage.setOnClickListener {
                     person.items.add(Item("Item", 0.00))
@@ -174,7 +177,6 @@ class PersonListFragment: Fragment() {
                             person.items[i].name = itemName.text.toString()
                             person.items[i].price = itemPrice.text.toString().toDouble()
 
-                            person.total = calculateIndividualSubtotal()
                             updateUI()
                         }
 
