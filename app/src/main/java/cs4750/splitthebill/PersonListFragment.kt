@@ -159,6 +159,8 @@ class PersonListFragment: Fragment() {
 
                             itemName.text = itemNameEdit.text.toString()
                             itemPrice.text = itemPriceEdit.text.toString()
+                            person.items[i].name = itemName.text.toString()
+                            person.items[i].price = itemPrice.text.toString().toDouble()
                         }
 
                         isEditable = false
