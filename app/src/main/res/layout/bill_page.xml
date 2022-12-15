@@ -41,28 +41,19 @@
             app:layout_constraintTop_toBottomOf="@+id/title_textView" />
 
 <!--        // Text for number of people value-->
+
+
+        <!--        // Add Person Button Image-->
         <TextView
             android:id="@+id/number_of_people_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
             android:text="@string/number_of_people"
             android:textSize="34sp"
             app:layout_constraintEnd_toStartOf="@+id/people_add_imageView"
-            app:layout_constraintStart_toEndOf="@+id/people_subtract_imageView"
             app:layout_constraintTop_toBottomOf="@+id/number_of_people_label_textView" />
 
-<!--        // Subtract Person Button Image-->
-        <ImageView
-            android:id="@+id/people_subtract_imageView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="@+id/number_of_people_label_textView"
-            app:layout_constraintTop_toBottomOf="@+id/number_of_people_label_textView"
-            app:srcCompat="@drawable/minus_icon" />
-
-
-<!--        // Add Person Button Image-->
         <ImageView
             android:id="@+id/people_add_imageView"
             android:layout_width="30dp"

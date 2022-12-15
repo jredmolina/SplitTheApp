@@ -25,13 +25,13 @@ private const val KEY_SUBTOTALRESULT = "subTotalResult"
 
 class MainActivity : AppCompatActivity()
 {    // initialize counters
-    public var numberOfPeople = 2
+    public var numberOfPeople = 0
     public var tipAmount = 0.00
     public var taxResult = 0.00
     public var subtotalResult = 0.00
 
     private lateinit var numberOfPeopleTextView: TextView
-    private lateinit var peopleSubtractImageView: ImageView
+    //private lateinit var peopleSubtractImageView: ImageView
     private lateinit var peopleAddImageView: ImageView
 
     private lateinit var tipAmountTextView: TextView
@@ -79,7 +79,6 @@ class MainActivity : AppCompatActivity()
 
         // Displays settings values
         numberOfPeopleTextView = findViewById(R.id.number_of_people_textView)
-        peopleSubtractImageView = findViewById(R.id.people_subtract_imageView)
         peopleAddImageView = findViewById(R.id.people_add_imageView)
 
         tipAmountTextView = findViewById(R.id.tip_amount_textView)
@@ -97,15 +96,8 @@ class MainActivity : AppCompatActivity()
         dollarsignImageView = findViewById(R.id.dollarsign_imageView)
         dollarsignImageView2 = findViewById(R.id.dollarsign_imageView2)
 
-
-        peopleSubtractImageView.setOnClickListener {
-            removePerson()
-            checkNumberOfPeople()
-        }
-
         peopleAddImageView.setOnClickListener {
             addPerson()
-            checkNumberOfPeople()
         }
 
         tipSubtractImageView.setOnClickListener {
@@ -137,9 +129,7 @@ class MainActivity : AppCompatActivity()
             subtotalResultTextView.clearFocus()
         }
 
-        checkNumberOfPeople()
         checkTipAmount()
-
 
     }   // end onCreate function
 
@@ -170,6 +160,7 @@ class MainActivity : AppCompatActivity()
     private fun addPerson()
     {
         numberOfPeople++
+        //personListViewModel.numberOfPeople = num
         numberOfPeopleTextView.setText(numberOfPeople.toString())
     }   // end addPerson function
 
@@ -184,18 +175,6 @@ class MainActivity : AppCompatActivity()
         tipAmount += 5
         tipAmountTextView.setText(tipAmount.toString()+"%")
     }   // end removePerson function
-
-    private fun checkNumberOfPeople()
-    {
-        if (numberOfPeople == 2)    // hide subtract button so user can't go below 2 people
-        {
-            peopleSubtractImageView.setVisibility(View.INVISIBLE)
-        }
-        else
-        {
-            peopleSubtractImageView.setVisibility(View.VISIBLE)
-        }
-    }
 
     private fun checkTipAmount()
     {
