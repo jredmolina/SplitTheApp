@@ -155,14 +155,27 @@ class MainActivity : AppCompatActivity()
     {
         numberOfPeople--
         numberOfPeopleTextView.setText(numberOfPeople.toString())
+
+        //personListViewModel.numOfPeople.set(personListViewModel.numOfPeople.get() - 1)
+        personListViewModel.persons.removeAt(personListViewModel.numberOfPeople - 1)
+        personListViewModel.numberOfPeople--
+        //Notify Recyler View Of Change
+
     }   // end removePerson function
 
     private fun addPerson()
     {
         numberOfPeople++
-        //personListViewModel.numberOfPeople = num
         numberOfPeopleTextView.setText(numberOfPeople.toString())
-    }   // end addPerson function
+
+        //personListViewModel.numOfPeople.set(personListViewModel.numOfPeople.get() + 1)
+
+        personListViewModel.persons.add(Person())
+        personListViewModel.numberOfPeople++
+        //Update Recycler View Of Change
+
+    }
+
 
     private fun decreaseTaxAmount()
     {

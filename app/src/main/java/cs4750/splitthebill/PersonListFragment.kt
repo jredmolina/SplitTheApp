@@ -1,30 +1,25 @@
 package cs4750.splitthebill
 
-import android.content.res.Resources
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputFilter
-import android.text.Spanned
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.*
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+//import androidx.lifecycle:lifecycle-livedata-core
 
 const val TAG = "PersonListFragment"
 class PersonListFragment: Fragment() {
 
     private lateinit var personRecyclerView: RecyclerView
     private lateinit var itemRecyclerView: RecyclerView
+    private lateinit var peopleAddImageView: ImageView
     private var adapter: PersonAdapter? = null
 
     private val personListViewModel: PersonListViewModel by lazy {
@@ -34,7 +29,21 @@ class PersonListFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+/*        val peopleObserver = Observer<Int> { num ->
+           personListViewModel.persons.add(Person())
+           personRecyclerView.adapter!!.notifyItemInserted(num - 1)
+       }
 
+       // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
+       personListViewModel.numOfPeople.observe(this, peopleObserver)*/
+    }
+
+    fun addPerson(position : Int){
+        personRecyclerView.adapter!!.notifyItemInserted(position)
+    }
+
+    fun removePerson(position : Int){
+        personRecyclerView.adapter!!.notifyItemRemoved(position)
     }
 
     override fun onCreateView(
@@ -49,7 +58,6 @@ class PersonListFragment: Fragment() {
             view.findViewById(R.id.person_recycler_view) as RecyclerView
         personRecyclerView.layoutManager = LinearLayoutManager(context)
 
-
         updateUI()
         return view
     }
@@ -63,7 +71,7 @@ class PersonListFragment: Fragment() {
 
 
     // Updates UI by passing persons array back to adapter
-    private fun updateUI() {
+    fun updateUI() {
         val persons = personListViewModel.persons
         val itemCount = persons.size
         for (i in 0 until itemCount){
@@ -71,20 +79,21 @@ class PersonListFragment: Fragment() {
         }
         adapter = PersonAdapter(persons)
         personRecyclerView.adapter = adapter
-
     }
 
     // Displays view for each person
     private inner class PersonHolder(view: View)
         : RecyclerView.ViewHolder(view){
-            val titleTextView: TextView = itemView.findViewById(R.id.person_title)
-            val itemRecycler: RecyclerView = view.findViewById(R.id.item_recycler_view)
-            val totalTextView: TextView = view.findViewById(R.id.person_total)
-            val addItemImage: ImageView = view.findViewById(R.id.item_add_imageView)
-            val editPersonImage: ImageView = view.findViewById(R.id.editImageView)
-            val deletePersonImage: ImageView = view.findViewById(R.id.deletePersonImage)
-            val personTitleEditText: EditText = view.findViewById(R.id.person_title_edit)
-        }
+        val titleTextView: TextView = itemView.findViewById(R.id.person_title)
+        val itemRecycler: RecyclerView = view.findViewById(R.id.item_recycler_view)
+        val totalTextView: TextView = view.findViewById(R.id.person_total)
+        val addItemImage: ImageView = view.findViewById(R.id.item_add_imageView)
+        val editPersonImage: ImageView = view.findViewById(R.id.editImageView)
+        val deletePersonImage: ImageView = view.findViewById(R.id.deletePersonImage)
+        val personTitleEditText: EditText = view.findViewById(R.id.person_title_edit)
+        val minimizeImage: ImageView = view.findViewById(R.id.minimizeImageView)
+        val minimizeImageUp: ImageView = view.findViewById(R.id.minimizeImageViewUp)
+    }
 
     // Connects data to Display
     private inner class PersonAdapter(var persons: MutableList<Person>)
@@ -104,6 +113,17 @@ class PersonListFragment: Fragment() {
         // Connects data of each individual person to display
         override fun onBindViewHolder(holder: PersonHolder, position: Int) {
             val person = persons[position]
+
+            if(!person.isVisible){
+                holder.itemRecycler.setVisibility(View.GONE)
+                holder.minimizeImage.setVisibility(View.VISIBLE)
+                holder.minimizeImageUp.setVisibility(View.INVISIBLE)
+            }else{
+                holder.itemRecycler.setVisibility(View.VISIBLE)
+                holder.minimizeImage.setVisibility(View.INVISIBLE)
+                holder.minimizeImageUp.setVisibility(View.VISIBLE)
+            }
+
             holder.apply {
                 var isEditable = false
 
@@ -112,6 +132,9 @@ class PersonListFragment: Fragment() {
 
                 addItemImage.setOnClickListener {
                     person.items.add(Item("Item", 0.00))
+                    if(!person.isVisible){
+                        person.isVisible = true
+                    }
                     updateUI()
                 }
 
@@ -187,6 +210,42 @@ class PersonListFragment: Fragment() {
                         isEditable = false
                     }
                 }
+
+                minimizeImage.setOnClickListener{
+                    if(itemRecycler.adapter!!.itemCount > 0){
+                        if(itemRecycler.isVisible){
+                            itemRecycler.setVisibility(View.GONE)
+                            person.isVisible = false
+                            minimizeImage.setVisibility(View.VISIBLE)
+                            minimizeImageUp.setVisibility(View.INVISIBLE)
+                        }else{
+                            itemRecycler.setVisibility(View.VISIBLE)
+                            person.isVisible = true
+                            minimizeImage.setVisibility(View.INVISIBLE)
+                            minimizeImageUp.setVisibility(View.VISIBLE)
+                        }
+                    }else{
+                        //do nothing
+                    }
+                }
+
+                minimizeImageUp.setOnClickListener(){
+                    if(itemRecycler.adapter!!.itemCount > 0){
+                        if(itemRecycler.isVisible){
+                            itemRecycler.setVisibility(View.GONE)
+                            person.isVisible = false
+                            minimizeImage.setVisibility(View.VISIBLE)
+                            minimizeImageUp.setVisibility(View.INVISIBLE)
+                        }else{
+                            itemRecycler.setVisibility(View.VISIBLE)
+                            person.isVisible = true
+                            minimizeImage.setVisibility(View.INVISIBLE)
+                            minimizeImageUp.setVisibility(View.VISIBLE)
+                        }
+                    }else{
+                        //do nothing
+                    }
+                }
             }
 
 
@@ -201,7 +260,7 @@ class PersonListFragment: Fragment() {
             holder.itemRecycler.setAdapter(itemAdapter)
             holder.itemRecycler.setRecycledViewPool(viewPool)
         }
-        }
+    }
     private inner class ItemHolder(view: View)
         :RecyclerView.ViewHolder(view){
         val titleTextView: TextView = itemView.findViewById(R.id.item_title)
@@ -217,33 +276,30 @@ class PersonListFragment: Fragment() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
             val view = layoutInflater.inflate(R.layout.list_item_personitems, parent, false)
             return ItemHolder(view)
-
         }
 
         override fun getItemCount() = items.size
 
         override fun onBindViewHolder(holder: ItemHolder, position: Int){
             val item = items[position]
-                holder.apply{
-                    titleTextView.text = item.name
-                    priceTextView.text = item.price.toString()
+            holder.apply{
+                titleTextView.text = item.name
+                priceTextView.text = item.price.toString()
 
-                    itemDeleteImage.setOnClickListener{
-                        items.removeAt(position)
-                        updateUI()
-                    }
-
+                itemDeleteImage.setOnClickListener{
+                    items.removeAt(position)
+                    updateUI()
                 }
-            }
 
+            }
         }
 
+    }
 
     companion object{
         fun newInstance(): PersonListFragment {
             return PersonListFragment()
         }
+
     }
-
-
 }
