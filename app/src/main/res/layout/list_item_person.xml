@@ -20,12 +20,11 @@
                     android:id="@+id/item_add_imageView"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="30px"
-                    android:layout_marginTop="20px"
+                    android:layout_marginStart="320dp"
+                    android:layout_marginTop="16dp"
                     android:foreground="@android:drawable/ic_menu_add"
-                    app:layout_constraintEnd_toEndOf="@+id/number_of_people_label_textView"
-                    app:layout_constraintStart_toEndOf="@+id/person_total"
-                    app:layout_constraintTop_toBottomOf="@+id/item_recycler_view"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editImageView"
                     app:srcCompat="@drawable/add_icon" />
 
                 <TextView
@@ -40,7 +39,6 @@
                     android:visibility="visible"
                     app:layout_constraintBottom_toTopOf="@id/view"
                     app:layout_constraintStart_toEndOf="@+id/item_recycler_view" />
-
 
 
                 <!--// Line under name-->
@@ -106,15 +104,40 @@
                     android:id="@+id/person_total"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="16dp"
                     android:text="$0.00"
                     android:textColor="@color/white"
                     android:textSize="20dp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/view"
-                    app:layout_constraintTop_toBottomOf="@id/item_recycler_view" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/person_tax" />
+
+                <!--        // Text for individual tax amount-->
+
+                <!--        // Text for individual tip amount-->
+                <TextView
+                    android:id="@+id/person_tax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:text="$0.00"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/person_tip" />
+
+                <TextView
+                    android:id="@+id/person_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:text="$0.00"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/item_recycler_view" />
 
                 <ImageView
                     android:id="@+id/deletePersonImage"

@@ -18,6 +18,11 @@ class Person {
     // Total amount a person is paying
     var total: Double = 0.00
 
+    // tip amount for person
+    var tip: Double = 0.00
+
+    // tax amount for person (based on % of total subtotal they spent)
+    var tax: Double = 0.00
 
     // Adds blank item to item list
     fun addItem() {
@@ -29,7 +34,6 @@ class Person {
     fun calculateTotal(num:Double){
         total+=num
     }
-
 
 }
 

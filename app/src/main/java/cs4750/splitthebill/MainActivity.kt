@@ -25,7 +25,7 @@ private const val KEY_SUBTOTALRESULT = "subTotalResult"
 
 class MainActivity : AppCompatActivity()
 {    // initialize counters
-    public var numberOfPeople = 0
+    //public var numberOfPeople = 0
     public var tipAmount = 0.00
     public var taxResult = 0.00
     public var subtotalResult = 0.00
@@ -43,9 +43,13 @@ class MainActivity : AppCompatActivity()
     private lateinit var dollarsignImageView: ImageView
     private lateinit var dollarsignImageView2: ImageView
 
-    private val personListViewModel: PersonListViewModel by lazy{
+    private lateinit var personTax: TextView
+    private lateinit var personTip: TextView
+
+    /*private val personListViewModel: PersonListViewModel by lazy{
         ViewModelProviders.of(this).get(PersonListViewModel::class.java)
-    }
+    }*/
+    val personListViewModel = PersonListViewModel.initialize(this)
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -65,14 +69,14 @@ class MainActivity : AppCompatActivity()
         }
 
         // saved values of settings values
-        var numberOfPeople = savedInstanceState?.getInt(KEY_NUMOFPEOPLE, 2) ?: 2
-        personListViewModel.numberOfPeople = numberOfPeople
+        var numberOfPeople = savedInstanceState?.getInt(KEY_NUMOFPEOPLE, 0) ?: 0
+        PersonListViewModel.numberOfPeople = numberOfPeople
         var tipAmount = savedInstanceState?.getDouble(KEY_TIPAMOUNT, 0.0) ?: 0.0
-        personListViewModel.tipAmount = tipAmount
+        PersonListViewModel.tipAmount = tipAmount
         var taxResult = savedInstanceState?.getDouble(KEY_TAXRESULT, 0.0) ?: 0.0
-        personListViewModel.taxResult = taxResult
+        PersonListViewModel.taxResult = taxResult
         var subtotalResult = savedInstanceState?.getDouble(KEY_SUBTOTALRESULT, 0.0) ?: 0.0
-        personListViewModel.subtotalResult=subtotalResult
+        PersonListViewModel.subtotalResult=subtotalResult
 
 
 
@@ -98,15 +102,16 @@ class MainActivity : AppCompatActivity()
 
         peopleAddImageView.setOnClickListener {
             addPerson()
+            Log.i(TAG, "Number of people: ${PersonListViewModel.numberOfPeople}")
         }
 
         tipSubtractImageView.setOnClickListener {
-            decreaseTaxAmount()
+            decreaseTipAmount()
             checkTipAmount()
         }
 
         tipAddImageView.setOnClickListener {
-            increaseTaxAmount()
+            increaseTipAmount()
             checkTipAmount()
         }
 
@@ -117,7 +122,8 @@ class MainActivity : AppCompatActivity()
             taxResultTextView.setText(userText)
             taxResultTextView.addTextChangedListener(textWatcher)
             taxResultTextView.clearFocus()
-
+            PersonListViewModel.taxResult = userText.toString().toDouble()
+            Log.i("TAG", "new tax result  aaaaa: ${PersonListViewModel.taxResult}")
         }
 
         // Tap on the subtotalResultTextView to edit value
@@ -127,6 +133,9 @@ class MainActivity : AppCompatActivity()
             subtotalResultTextView.setText(userText)
             subtotalResultTextView.addTextChangedListener(textWatcher)
             subtotalResultTextView.clearFocus()
+            PersonListViewModel.subtotalResult = userText.toString().toDouble()
+            Log.i("TAG", "new subtotal result aaaa: ${PersonListViewModel.subtotalResult}")
+            //calculateIndividualTip()
         }
 
         checkTipAmount()
@@ -135,10 +144,11 @@ class MainActivity : AppCompatActivity()
 
     private val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            if (!tipAmountTextView.text.isEmpty() && !subtotalResultTextView.text.isEmpty()) {
+            /*if (!tipAmountTextView.text.isEmpty() && !subtotalResultTextView.text.isEmpty()) {
+                Log.i(TAG, "Individual tip called")
                 calculateIndividualTip()
-
-            }
+                // **** moved updating and calculating individual tip to PersonListFragment.kt ****
+            }*/
 
         }
         override fun beforeTextChanged(s: CharSequence, start: Int,
@@ -151,29 +161,38 @@ class MainActivity : AppCompatActivity()
         }
     }
 
-    private fun removePerson()
+    /*private fun removePerson()
     {
-        numberOfPeople--
+        var
         numberOfPeopleTextView.setText(numberOfPeople.toString())
-    }   // end removePerson function
+    }   // end removePerson function*/
 
     private fun addPerson()
     {
-        numberOfPeople++
-        //personListViewModel.numberOfPeople = num
-        numberOfPeopleTextView.setText(numberOfPeople.toString())
+        PersonListViewModel.numberOfPeople++
+        numberOfPeopleTextView.setText(PersonListViewModel.numberOfPeople.toString())
     }   // end addPerson function
 
-    private fun decreaseTaxAmount()
+    private fun decreaseTipAmount()
     {
         tipAmount -= 5
         tipAmountTextView.setText(tipAmount.toString()+"%")
+        PersonListViewModel.tipAmount = tipAmount
+        Log.i("TAG", "tip amount: ${PersonListViewModel.tipAmount}")
+        //calculateIndividualTip()
+        //calculateIndividualTax()
+        //calculateIndividualSubtotal()
     }   // end removePerson function
 
-    private fun increaseTaxAmount()
+    private fun increaseTipAmount()
     {
         tipAmount += 5
         tipAmountTextView.setText(tipAmount.toString()+"%")
+        PersonListViewModel.tipAmount = tipAmount
+        Log.i("TAG", "tip amount: ${PersonListViewModel.tipAmount}")
+        //calculateIndividualTip()
+        //calculateIndividualTax()
+        //calculateIndividualSubtotal()
     }   // end removePerson function
 
     private fun checkTipAmount()
@@ -200,10 +219,10 @@ class MainActivity : AppCompatActivity()
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putInt(KEY_NUMOFPEOPLE,  personListViewModel.numberOfPeople)
-        savedInstanceState.putDouble(KEY_TIPAMOUNT,  personListViewModel.tipAmount)
-        savedInstanceState.putDouble(KEY_TAXRESULT,  personListViewModel.taxResult)
-        savedInstanceState.putDouble(KEY_SUBTOTALRESULT,  personListViewModel.subtotalResult)
+        savedInstanceState.putInt(KEY_NUMOFPEOPLE,  PersonListViewModel.numberOfPeople)
+        savedInstanceState.putDouble(KEY_TIPAMOUNT,  PersonListViewModel.tipAmount)
+        savedInstanceState.putDouble(KEY_TAXRESULT,  PersonListViewModel.taxResult)
+        savedInstanceState.putDouble(KEY_SUBTOTALRESULT,  PersonListViewModel.subtotalResult)
 
     }
 
@@ -217,36 +236,6 @@ class MainActivity : AppCompatActivity()
 
     override fun onPause() {
         super.onPause()
-    }
-
-    // Calculate the tip amount a person has to pay by ((tip percentage) *
-    // (Entire bill subtotal)) / (number of people in the party)
-    private fun calculateIndividualTip() {
-
-        var individualTip = ((tipAmount / 100) * subtotalResultTextView.text.toString().toDouble()) / numberOfPeople
-        Log.i(TAG, "Individual tip : $individualTip")
-    }
-
-    /**
-     * Currently this is hardcoded to calculate the subtotal for the first person.( person in the [0] index )
-     * I think we can change this function and have it call whenever a user edits their
-     * food items in their Person object so each person has their own individualSubtotal
-     * */
-
-    private fun calculateIndividualSubtotal(): Double {
-
-        var individualSubtotal = personListViewModel.persons[0].items.sumOf{ it.price }   // sumOf is a built in method that sums all elements in an object
-        Log.i(TAG, "Individual subtotal : $individualSubtotal")
-        return individualSubtotal
-
-    }
-    
-    private fun calculateIndividualTax() {
-
-        var individualSubtotal = calculateIndividualSubtotal()
-        var individualTax = (individualSubtotal / subtotalResultTextView.text.toString().toDouble()) * taxResultTextView.text.toString().toDouble()
-        Log.i(TAG, "Individual tax amount : $individualTax")
-
     }
 
     // Filter to limit tax and subtotal input decimal values

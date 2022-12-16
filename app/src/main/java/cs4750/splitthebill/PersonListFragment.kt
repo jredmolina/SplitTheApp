@@ -21,19 +21,21 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 const val TAG = "PersonListFragment"
+
+
 class PersonListFragment: Fragment() {
 
     private lateinit var personRecyclerView: RecyclerView
     private lateinit var itemRecyclerView: RecyclerView
     private var adapter: PersonAdapter? = null
 
-    private val personListViewModel: PersonListViewModel by lazy {
+        /*private val personListViewModel: PersonListViewModel by lazy {
         ViewModelProviders.of(this).get(PersonListViewModel::class.java)
-    }
+    }*/
+    val personListViewModel = PersonListViewModel.get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
     }
 
@@ -55,20 +57,44 @@ class PersonListFragment: Fragment() {
     }
 
     fun calculateIndividualSubtotal(position: Int): Double {
-
-        var individualSubtotal = personListViewModel.persons[position].items.sumOf{ it.price }   // sumOf is a built in method that sums all elements in an object
+        var individualSubtotal = String.format("%.2f",  PersonListViewModel.persons[position].items.sumOf{ it.price }).toDouble()   // sumOf is a built in method that sums all elements in an object
         return individualSubtotal
-
     }
 
+    private fun calculateIndividualTax(position: Int): Double {
+
+        var individualSubtotal = PersonListViewModel.persons[position].total
+        var individualTax = String.format("%.2f", (individualSubtotal / PersonListViewModel.subtotalResult.toString().toDouble()) * PersonListViewModel.taxResult.toString().toDouble()).toDouble()
+        Log.i("TAG", "After calculating tax of person  aaaa: $individualTax")
+        return individualTax
+    }
+
+    // Calculate the tip amount a person has to pay by ((tip percentage) *
+    // (Entire bill subtotal)) / (number of people in the party)
+    private fun calculateIndividualTip(position: Int): Double {
+        var individualTip = String.format("%.2f",  ((PersonListViewModel.tipAmount.toString().toDouble() / 100) * PersonListViewModel.subtotalResult.toString().toDouble()) / PersonListViewModel.numberOfPeople).toDouble()
+        //var individualTip = ((PersonListViewModel.tipAmount.toString().toDouble() / 100) * PersonListViewModel.subtotalResult.toString().toDouble()) / PersonListViewModel.numberOfPeople
+        Log.i("TAG", "After calculating tip of person: $individualTip")
+        return individualTip
+    }   // end calculate tip
 
     // Updates UI by passing persons array back to adapter
     private fun updateUI() {
-        val persons = personListViewModel.persons
+        val persons = PersonListViewModel.persons
         val itemCount = persons.size
         for (i in 0 until itemCount){
             persons[i].total = calculateIndividualSubtotal(i)
+
+            if (PersonListViewModel.taxResult != 0.00 && PersonListViewModel.subtotalResult != 0.00 && PersonListViewModel.numberOfPeople != 0) {
+                persons[i].tax = calculateIndividualTax(i)
+            }
+
+            if (PersonListViewModel.tipAmount != 0.00 && PersonListViewModel.subtotalResult != 0.00 && PersonListViewModel.numberOfPeople != 0) {
+                persons[i].tip = calculateIndividualTip(i)
+            }
+
         }
+
         adapter = PersonAdapter(persons)
         personRecyclerView.adapter = adapter
 
@@ -80,6 +106,8 @@ class PersonListFragment: Fragment() {
             val titleTextView: TextView = itemView.findViewById(R.id.person_title)
             val itemRecycler: RecyclerView = view.findViewById(R.id.item_recycler_view)
             val totalTextView: TextView = view.findViewById(R.id.person_total)
+            val personTax: TextView = view.findViewById(R.id.person_tax)
+            val personTip: TextView = view.findViewById(R.id.person_tip)
             val addItemImage: ImageView = view.findViewById(R.id.item_add_imageView)
             val editPersonImage: ImageView = view.findViewById(R.id.editImageView)
             val deletePersonImage: ImageView = view.findViewById(R.id.deletePersonImage)
@@ -109,9 +137,13 @@ class PersonListFragment: Fragment() {
 
                 titleTextView.setText(person.name)
                 totalTextView.setText("Total Owed: " + person.total.toString())
+                personTax.setText("Tax amount: " + person.tax.toString())
+                personTip.setText("Tip amount: " + person.tip.toString())
 
                 addItemImage.setOnClickListener {
                     person.items.add(Item("Item", 0.00))
+                    //PersonListViewModel.numberOfPeople++
+                    //Log.i(TAG, "Add item tapped - number of people: ${PersonListViewModel.numberOfPeople}")
                     updateUI()
                 }
 
