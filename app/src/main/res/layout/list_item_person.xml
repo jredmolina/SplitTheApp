@@ -81,6 +81,7 @@
 
                 <!--        // Image for Collapse button-->
                 <ImageView
+                    android:id="@+id/minimizeImageView"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="12dp"
@@ -89,7 +90,17 @@
                     android:src="@drawable/ic_chevron_down"
                     app:layout_constraintStart_toEndOf="@+id/editImageView"
                     app:layout_constraintTop_toTopOf="parent" />
-
+                <!--        // Image for Collapse button-->
+                <ImageView
+                    android:id="@+id/minimizeImageViewUp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="18dp"
+                    android:background="@color/black"
+                    android:src="@drawable/ic_chevron_up"
+                    app:layout_constraintStart_toEndOf="@+id/editImageView"
+                    app:layout_constraintTop_toTopOf="parent" />
                 <!--        //RecyclerView for Person's item list-->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/item_recycler_view"

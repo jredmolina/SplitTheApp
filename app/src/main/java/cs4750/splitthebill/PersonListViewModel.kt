@@ -31,10 +31,7 @@ class PersonListViewModel private constructor(context: Context) {
         var numberOfPeople = 0
 
         // List of Persons
-        val persons = mutableListOf<Person>(
-            Person(),
-            Person(),
-        )
+        val persons = mutableListOf<Person>()
 
         // Numerical Values initialized to 0
         var tipAmount = 0.00

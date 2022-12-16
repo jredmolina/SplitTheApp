@@ -15,6 +15,9 @@ class Person {
         Item("Item", 0.00),
     )
 
+    //is the list supposed to be visible or not
+    var isVisible = true
+
     // Total amount a person is paying
     var total: Double = 0.00
 

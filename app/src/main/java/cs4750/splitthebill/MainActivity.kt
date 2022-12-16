@@ -1,6 +1,8 @@
 package cs4750.splitthebill
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.InputFilter
 import android.text.Spanned
@@ -46,13 +48,33 @@ class MainActivity : AppCompatActivity()
     private lateinit var personTax: TextView
     private lateinit var personTip: TextView
 
+    lateinit var mainHandler: Handler
+
     /*private val personListViewModel: PersonListViewModel by lazy{
         ViewModelProviders.of(this).get(PersonListViewModel::class.java)
     }*/
     val personListViewModel = PersonListViewModel.initialize(this)
 
+    override fun onResume() {
+        mainHandler.post(updateRecyler)
+        super.onResume()
+    }
+
+
+    private val updateRecyler = object : Runnable {
+        override fun run() {
+            if(numberOfPeopleTextView.text.toString().toInt() != PersonListViewModel.numberOfPeople){
+                numberOfPeopleTextView.setText(PersonListViewModel.numberOfPeople.toString())
+            }
+
+            mainHandler.postDelayed(this, 100)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
+        mainHandler = Handler(Looper.getMainLooper())
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.bill_page)
 
@@ -228,10 +250,6 @@ class MainActivity : AppCompatActivity()
 
     override fun onStart() {
         super.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onPause() {

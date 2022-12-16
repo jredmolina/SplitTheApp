@@ -2,6 +2,8 @@ package cs4750.splitthebill
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.InputFilter
 import android.text.Spanned
@@ -28,8 +30,10 @@ class PersonListFragment: Fragment() {
     private lateinit var personRecyclerView: RecyclerView
     private lateinit var itemRecyclerView: RecyclerView
     private var adapter: PersonAdapter? = null
+    private var num: Int = 0
+    lateinit var mainHandler: Handler
 
-        /*private val personListViewModel: PersonListViewModel by lazy {
+    /*private val personListViewModel: PersonListViewModel by lazy {
         ViewModelProviders.of(this).get(PersonListViewModel::class.java)
     }*/
     val personListViewModel = PersonListViewModel.get()
@@ -37,6 +41,34 @@ class PersonListFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        num = PersonListViewModel.persons.size
+        mainHandler = Handler(Looper.getMainLooper())
+
+    }
+
+    override fun onResume() {
+        mainHandler.post(updateRecyler)
+        super.onResume()
+    }
+
+
+    private val updateRecyler = object : Runnable {
+        override fun run() {
+            if(PersonListViewModel.numberOfPeople != num){
+                print(PersonListViewModel.numberOfPeople)
+                print(" , ")
+                print(num)
+                println()
+                if(num < PersonListViewModel.numberOfPeople){
+                    num++
+                    PersonListViewModel.persons.add(Person())
+                    personRecyclerView.adapter!!.notifyItemInserted(PersonListViewModel.persons.size - 1)
+                }else if(num > PersonListViewModel.numberOfPeople){
+                    num--
+                }
+            }
+            mainHandler.postDelayed(this, 100)
+        }
     }
 
     override fun onCreateView(
@@ -112,6 +144,8 @@ class PersonListFragment: Fragment() {
             val editPersonImage: ImageView = view.findViewById(R.id.editImageView)
             val deletePersonImage: ImageView = view.findViewById(R.id.deletePersonImage)
             val personTitleEditText: EditText = view.findViewById(R.id.person_title_edit)
+            val minimizeImage: ImageView = view.findViewById(R.id.minimizeImageView)
+            val minimizeImageUp: ImageView = view.findViewById(R.id.minimizeImageViewUp)
         }
 
     // Connects data to Display
@@ -132,6 +166,18 @@ class PersonListFragment: Fragment() {
         // Connects data of each individual person to display
         override fun onBindViewHolder(holder: PersonHolder, position: Int) {
             val person = persons[position]
+
+            if(!person.isVisible){
+                holder.itemRecycler.setVisibility(View.GONE)
+                holder.minimizeImage.setVisibility(View.VISIBLE)
+                holder.minimizeImageUp.setVisibility(View.INVISIBLE)
+            }else{
+                holder.itemRecycler.setVisibility(View.VISIBLE)
+                holder.minimizeImage.setVisibility(View.INVISIBLE)
+                holder.minimizeImageUp.setVisibility(View.VISIBLE)
+            }
+
+
             holder.apply {
                 var isEditable = false
 
@@ -142,13 +188,15 @@ class PersonListFragment: Fragment() {
 
                 addItemImage.setOnClickListener {
                     person.items.add(Item("Item", 0.00))
-                    //PersonListViewModel.numberOfPeople++
-                    //Log.i(TAG, "Add item tapped - number of people: ${PersonListViewModel.numberOfPeople}")
+                    if(!person.isVisible){
+                        person.isVisible = true
+                    }
                     updateUI()
                 }
 
                 deletePersonImage.setOnClickListener{
                     persons.removeAt(position)
+                    PersonListViewModel.numberOfPeople--
                     personRecyclerView.adapter!!.notifyItemRemoved(position)
                 }
 
@@ -219,7 +267,44 @@ class PersonListFragment: Fragment() {
                         isEditable = false
                     }
                 }
-            }
+
+                minimizeImage.setOnClickListener{
+                    if(itemRecycler.adapter!!.itemCount > 0){
+                        if(itemRecycler.isVisible){
+                            itemRecycler.setVisibility(View.GONE)
+                            person.isVisible = false
+                            minimizeImage.setVisibility(View.VISIBLE)
+                            minimizeImageUp.setVisibility(View.INVISIBLE)
+                        }else{
+                            itemRecycler.setVisibility(View.VISIBLE)
+                            person.isVisible = true
+                            minimizeImage.setVisibility(View.INVISIBLE)
+                            minimizeImageUp.setVisibility(View.VISIBLE)
+                        }
+                    }else{
+                        //do nothing
+                    }
+                }
+
+                minimizeImageUp.setOnClickListener(){
+                    if(itemRecycler.adapter!!.itemCount > 0){
+                        if(itemRecycler.isVisible){
+                            itemRecycler.setVisibility(View.GONE)
+                            person.isVisible = false
+                            minimizeImage.setVisibility(View.VISIBLE)
+                            minimizeImageUp.setVisibility(View.INVISIBLE)
+                        }else{
+                            itemRecycler.setVisibility(View.VISIBLE)
+                            person.isVisible = true
+                            minimizeImage.setVisibility(View.INVISIBLE)
+                            minimizeImageUp.setVisibility(View.VISIBLE)
+                        }
+                    }else{
+                        //do nothing
+                    }
+                }
+
+        }
 
 
 
