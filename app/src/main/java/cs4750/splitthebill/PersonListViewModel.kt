@@ -11,7 +11,7 @@ class PersonListViewModel: ViewModel() {
     )
 
     // Number of persons initialized to 2
-    var numberOfPeople = 2
+    var numberOfPeople = 0
 
     // Numerical Values initialized to 0
     var tipAmount = 0.00

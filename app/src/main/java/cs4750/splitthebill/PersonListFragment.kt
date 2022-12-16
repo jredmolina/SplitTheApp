@@ -1,41 +1,56 @@
 package cs4750.splitthebill
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.os.HandlerCompat.postDelayed
 import androidx.core.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
 //import androidx.lifecycle:lifecycle-livedata-core
 
 const val TAG = "PersonListFragment"
 class PersonListFragment: Fragment() {
 
-    private lateinit var personRecyclerView: RecyclerView
+    lateinit var personRecyclerView: RecyclerView
     private lateinit var itemRecyclerView: RecyclerView
     private lateinit var peopleAddImageView: ImageView
     private var adapter: PersonAdapter? = null
+    private var num: Int = 0
+    lateinit var mainHandler: Handler
 
+    private val updateRecyler = object : Runnable {
+        override fun run() {
+            if(personListViewModel.persons.size != num){
+                num = personListViewModel.persons.size
+                personRecyclerView.adapter!!.notifyItemInserted(personListViewModel.persons.size - 1)
+                updateUI()
+            }
+            mainHandler.postDelayed(this, 200)
+        }
+    }
     private val personListViewModel: PersonListViewModel by lazy {
         ViewModelProviders.of(this).get(PersonListViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        num = personListViewModel.persons.size
+        mainHandler = Handler(Looper.getMainLooper())
+    }
 
-/*        val peopleObserver = Observer<Int> { num ->
-           personListViewModel.persons.add(Person())
-           personRecyclerView.adapter!!.notifyItemInserted(num - 1)
-       }
-
-       // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-       personListViewModel.numOfPeople.observe(this, peopleObserver)*/
+    override fun onResume() {
+        mainHandler.post(updateRecyler)
+        super.onResume()
     }
 
     fun addPerson(position : Int){
@@ -135,6 +150,7 @@ class PersonListFragment: Fragment() {
                     if(!person.isVisible){
                         person.isVisible = true
                     }
+
                     updateUI()
                 }
 
@@ -260,6 +276,16 @@ class PersonListFragment: Fragment() {
             holder.itemRecycler.setAdapter(itemAdapter)
             holder.itemRecycler.setRecycledViewPool(viewPool)
         }
+
+/*        companion object{
+            fun update(){
+                personListViewModel.persons.add(Person())
+                personListViewModel.numberOfPeople++
+
+                personRecyclerView.adapter!!.notifyItemInserted(personListViewModel.numberOfPeople - 1)
+            }
+        }*/
+
     }
     private inner class ItemHolder(view: View)
         :RecyclerView.ViewHolder(view){
@@ -301,5 +327,8 @@ class PersonListFragment: Fragment() {
             return PersonListFragment()
         }
 
+        fun update(){
+
+        }
     }
 }
