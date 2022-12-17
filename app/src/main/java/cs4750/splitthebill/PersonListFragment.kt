@@ -182,7 +182,7 @@ class PersonListFragment: Fragment() {
                 var isEditable = false
 
                 titleTextView.setText(person.name)
-                totalTextView.setText("Total Owed: " + person.total.toString())
+                totalTextView.setText("Item Total: " + person.total.toString())
                 personTax.setText("Tax amount: " + person.tax.toString())
                 personTip.setText("Tip amount: " + person.tip.toString())
 
@@ -198,6 +198,7 @@ class PersonListFragment: Fragment() {
                     persons.removeAt(position)
                     PersonListViewModel.numberOfPeople--
                     personRecyclerView.adapter!!.notifyItemRemoved(position)
+                    updateUI()
                 }
 
                 editPersonImage.setOnClickListener{
